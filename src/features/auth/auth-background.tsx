@@ -89,23 +89,20 @@ function generateDitheredIslandDataUrl(
  * Uses viewport dimensions minus a few dozen pixels. Dithering only at the island edge.
  */
 export function AuthBackground() {
-  const [dims, setDims] = useState({ w: 1024, h: 1024 });
+  const [dims, setDims] = useState(() => {
+    if (typeof window === "undefined") return { w: 1024, h: 1024 };
+    return {
+      w: Math.max(1, window.innerWidth),
+      h: Math.max(1, window.innerHeight),
+    };
+  });
+  const [displayOpacity, setDisplayOpacity] = useState(1);
+  const [displayDataUrl, setDisplayDataUrl] = useState(FALLBACK_DATA_URL);
   const { resolvedTheme } = useTheme();
   const invert = resolvedTheme === "dark";
 
   const islandSize = invert ? 0.7 : 0.55;
   const edgeWidth = invert ? 0.32 : 0.3;
-
-  useEffect(() => {
-    const update = () =>
-      setDims({
-        w: Math.max(1, window.innerWidth),
-        h: Math.max(1, window.innerHeight),
-      });
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
 
   const dataUrl = useMemo(() => {
     if (typeof document === "undefined") return FALLBACK_DATA_URL;
@@ -118,17 +115,60 @@ export function AuthBackground() {
     );
   }, [dims.w, dims.h, islandSize, edgeWidth]);
 
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    const update = () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(
+        () =>
+          setDims({
+            w: Math.max(1, window.innerWidth),
+            h: Math.max(1, window.innerHeight),
+          }),
+        150,
+      );
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  // Crossfade when dataUrl changes (theme, resize) to avoid snapping
+  useEffect(() => {
+    if (dataUrl === displayDataUrl) {
+      setDisplayOpacity(1);
+      return;
+    }
+    // Initial load: show immediately
+    const isInitial = displayDataUrl === FALLBACK_DATA_URL;
+    if (isInitial) {
+      setDisplayDataUrl(dataUrl);
+      setDisplayOpacity(1);
+      return;
+    }
+    setDisplayOpacity(0);
+    const t = setTimeout(() => {
+      setDisplayDataUrl(dataUrl);
+      requestAnimationFrame(() => setDisplayOpacity(1));
+    }, 150);
+    return () => clearTimeout(t);
+  }, [dataUrl, displayDataUrl]);
+
   return (
     <img
-      src={dataUrl}
+      src={displayDataUrl}
       alt="Auth background"
-      className="absolute inset-0 w-full h-full pointer-events-none z-0"
+      className="absolute inset-0 w-full h-full pointer-events-none z-0 transition-opacity duration-150 ease-out"
       style={{
         objectFit: "cover",
         objectPosition: "center",
         imageRendering: "pixelated",
         width: "100%",
         height: "100%",
+        opacity: displayOpacity,
         filter: invert ? "invert(1)" : undefined,
       }}
     />

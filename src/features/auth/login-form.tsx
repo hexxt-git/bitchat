@@ -37,6 +37,9 @@ export function LoginForm() {
   const { signIn } = useAuthActions();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const [emailVerificationSent, setEmailVerificationSent] = useState<
+    string | null
+  >(null);
 
   const form = useForm({
     defaultValues: {
@@ -52,14 +55,19 @@ export function LoginForm() {
       value: { email: string; password: string };
     }) => {
       setError(null);
+      setEmailVerificationSent(null);
       const formData = new FormData();
       formData.set("email", value.email);
       formData.set("password", value.password);
       formData.set("flow", "signIn");
 
       try {
-        await signIn("password", formData);
-        navigate({ to: "/" });
+        const result = await signIn("password", formData);
+        if (result?.signingIn) {
+          navigate({ to: "/" });
+        } else {
+          setEmailVerificationSent(value.email);
+        }
       } catch (err) {
         setError(getErrorMessage(err));
       }
@@ -109,6 +117,19 @@ export function LoginForm() {
             >
               {form.state.isSubmitting ? "Loading..." : "Log in"}
             </Button>
+            <div className="flex items-center gap-4">
+              <div className="flex-1 h-px bg-base-300" />
+              <span className="text-muted-foreground text-sm">or</span>
+              <div className="flex-1 h-px bg-base-300" />
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={form.state.isSubmitting}
+              onClick={() => void signIn("google")}
+            >
+              Sign in with Google
+            </Button>
             <div className="flex flex-row gap-2">
               <span>Don&apos;t have an account?</span>
               <Link
@@ -118,6 +139,16 @@ export function LoginForm() {
                 Register instead
               </Link>
             </div>
+            {emailVerificationSent && (
+              <div className="bg-base-200 border-2 border-foreground p-3">
+                <p className="font-medium">Check your email</p>
+                <p className="text-base-content/80 text-sm mt-1">
+                  Your email isn&apos;t verified yet. We sent a verification link
+                  to <strong>{emailVerificationSent}</strong>. Click the link to
+                  complete sign in.
+                </p>
+              </div>
+            )}
             {error && (
               <div className="bg-destructive-subtle border border-destructive-border p-2">
                 <p className="text-destructive font-mono text-xs">

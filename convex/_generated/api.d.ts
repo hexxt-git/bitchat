@@ -12,6 +12,7 @@ import type * as auth from "../auth.js";
 import type * as functions_auth from "../functions/auth.js";
 import type * as functions_chat from "../functions/chat.js";
 import type * as http from "../http.js";
+import type * as plunk from "../plunk.js";
 import type * as presence from "../presence.js";
 
 import type {
@@ -25,6 +26,7 @@ declare const fullApi: ApiFromModules<{
   "functions/auth": typeof functions_auth;
   "functions/chat": typeof functions_chat;
   http: typeof http;
+  plunk: typeof plunk;
   presence: typeof presence;
 }>;
 
