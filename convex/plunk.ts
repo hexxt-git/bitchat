@@ -27,7 +27,7 @@ export const PlunkEmail = Email({
     const fromEmail = fromMatch ? fromMatch[1].trim() : fromStr;
     const fromName = fromMatch
       ? fromStr.replace(/<[^>]+>/, "").trim()
-      : (provider.name ?? "Bit Chat");
+      : (provider.name ?? "Bitchat");
 
     const res = await fetch("https://api.useplunk.com/v1/send", {
       method: "POST",
