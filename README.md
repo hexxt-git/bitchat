@@ -1,45 +1,67 @@
-# Welcome to your Convex + React (Vite) + Convex Auth app
+# BitChat
 
-This is a [Convex](https://convex.dev/) project created with [`npm create convex`](https://www.npmjs.com/package/create-convex).
+BitChat is a real-time chat application built with **React**, **Vite**, and **Convex**. It supports authenticated users, chat rooms, and a modern UI with Tailwind-based styling.
 
-After the initial setup (<2 minutes) you'll have a working full-stack app using:
+## Tech stack
 
-- Convex as your backend (database, server logic)
-- [React](https://react.dev/) as your frontend (web page interactivity)
-- [Vite](https://vitest.dev/) for optimized web hosting
-- [Tailwind](https://tailwindcss.com/) for building great looking UI
-- [Convex Auth](https://labs.convex.dev/auth) for authentication
+- React 19
+- Vite
+- Convex (backend + auth + presence)
+- Tailwind CSS and shadcn/ui-style components
+- TypeScript
 
-## Get started
+## Getting started
 
-If you just cloned this codebase and didn't use `npm create convex`, run:
+### Prerequisites
 
-```
+- Node.js 18+ and npm
+- A Convex project (see `convex/` directory)
+
+### Install dependencies
+
+```bash
 npm install
+```
+
+### Run in development
+
+This runs both the frontend (Vite) and backend (Convex) together:
+
+```bash
 npm run dev
 ```
 
-If you're reading this README on GitHub and want to use this template, run:
+If the Convex dev server is not already configured, see `convex/` and `setup.mjs` for any project-specific setup.
 
+### Build for production
+
+```bash
+npm run build
 ```
-npm create convex@latest -- -t react-vite-convexauth
+
+### Preview production build
+
+```bash
+npm run preview
 ```
 
-For more information on how to configure Convex Auth, check out the [Convex Auth docs](https://labs.convex.dev/auth/).
+## Scripts reference
 
-For more examples of different Convex Auth flows, check out this [example repo](https://www.convex.dev/templates/convex-auth).
+These come from `package.json`:
 
-## Learn more
+- `npm run dev`: Run frontend and backend in parallel.
+- `npm run dev:frontend`: Run Vite dev server.
+- `npm run dev:backend`: Run Convex dev server.
+- `npm run build`: Type-check (`tsc -b`) and build with Vite.
+- `npm run lint`: Type-check and run ESLint.
+- `npm run preview`: Preview the production build with Vite.
 
-To learn more about developing your project with Convex, check out:
+## Contributing
 
-- The [Tour of Convex](https://docs.convex.dev/get-started) for a thorough introduction to Convex principles.
-- The rest of [Convex docs](https://docs.convex.dev/) to learn about all Convex features.
-- [Stack](https://stack.convex.dev/) for in-depth articles on advanced topics.
+1. Create a new branch for your changes.
+2. Run `npm run lint` and `npm run build` to ensure everything passes.
+3. Open a pull request and describe your changes clearly.
 
-## Join the community
+## License
 
-Join thousands of developers building full-stack apps with Convex:
-
-- Join the [Convex Discord community](https://convex.dev/community) to get help in real-time.
-- Follow [Convex on GitHub](https://github.com/get-convex/), star and contribute to the open-source implementation of Convex.
+This project is currently unlicensed. If you intend to open source it, add a proper license file (for example, MIT, Apache-2.0) and update this section.

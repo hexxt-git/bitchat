@@ -61,7 +61,7 @@ export function LoginForm() {
   return (
     <main className="w-full max-w-md min-w-0">
       <div className="flex flex-col gap-8">
-        <h1 className="text-4xl font-bold text-center">Bitchat</h1>
+        <h1 className="text-4xl font-bold text-center">BitChat</h1>
         <form
           id="login-form"
           onSubmit={(e) => {

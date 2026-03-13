@@ -29,7 +29,7 @@ function CreateRoomPage() {
       </div>
       <main className="relative z-10 h-svh flex flex-col items-center justify-center pt-16 pb-8 px-4">
         <div className="flex flex-col gap-8 w-full max-w-sm sm:max-w-md mx-auto">
-          <h1 className="text-4xl font-bold text-center">Bitchat</h1>
+          <h1 className="text-4xl font-bold text-center">BitChat</h1>
           <p className="text-center text-base-content/80">
             Create a new room to start chatting
           </p>
