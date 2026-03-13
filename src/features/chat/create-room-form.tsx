@@ -1,12 +1,17 @@
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { useForm } from "@tanstack/react-form";
+import { Field, useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 
-import { Button, FieldGroup, FormInput } from "@/features/shared/components/ui";
-import { Message } from "pixelarticons/react";
+import {
+  Button,
+  FieldGroup,
+  FormInput,
+  InputGroupAddon,
+} from "@/features/shared/components/ui";
+import { Attachment, Message } from "pixelarticons/react";
 import { getErrorMessage } from "@/features/shared/lib/utils";
 
 const createRoomSchema = z.object({
@@ -43,6 +48,10 @@ export function CreateRoomForm() {
     },
   });
 
+  const handleRandomize = () => {
+    form.setFieldValue("name", Math.floor(Math.random() * 1e16).toString(36));
+  };
+
   return (
     <form
       id="create-room-form"
@@ -60,7 +69,14 @@ export function CreateRoomForm() {
               label="Room name"
               type="text"
               placeholder="e.g. general"
-              rightIcon={Message}
+              addons={
+                <InputGroupAddon align="inline-end">
+                  <Button size="icon" onClick={handleRandomize}>
+                    <Attachment />
+                    <span className="sr-only">Randomize</span>
+                  </Button>
+                </InputGroupAddon>
+              }
             />
           )}
         />

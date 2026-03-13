@@ -41,6 +41,7 @@ export interface FormInputProps extends Omit<
   label?: string;
   leftIcon?: IconComponent;
   rightIcon?: IconComponent;
+  addons?: React.ReactNode;
   containerClassName?: string;
 }
 
@@ -51,6 +52,7 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
       label,
       leftIcon,
       rightIcon,
+      addons,
       containerClassName,
       className,
       autoComplete,
@@ -94,14 +96,6 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
             onBlur={field.handleBlur}
             onChange={(e) => field.handleChange(e.target.value)}
             data-slot="form-input-field"
-            className={cn(
-              "min-w-0 bg-base-100",
-              !leftIcon && "pl-3",
-              !rightIcon && "pr-3",
-              leftIcon && "pl-0",
-              rightIcon && "pr-0",
-              className,
-            )}
             aria-invalid={hasError}
             autoComplete={derivedAutoComplete}
             {...inputProps}
@@ -111,6 +105,7 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
               {React.createElement(rightIcon, { className: "size-4" })}
             </InputGroupAddon>
           )}
+          {addons}
         </InputGroup>
         <FieldError errors={errors} />
       </Field>
