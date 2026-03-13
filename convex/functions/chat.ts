@@ -2,8 +2,56 @@ import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
+export const createRoom = mutation({
+  args: {
+    name: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await getAuthUserId(ctx);
+    const name = args.name.trim();
+    if (!name) {
+      throw new Error("Room name is required");
+    }
+    const existing = await ctx.db
+      .query("rooms")
+      .withIndex("by_name", (q) => q.eq("name", name))
+      .first();
+    if (existing) {
+      return existing._id;
+    }
+    const userId = await getAuthUserId(ctx);
+    return await ctx.db.insert("rooms", {
+      name,
+      createdBy: userId ?? undefined,
+    });
+  },
+});
+
+export const getRoom = query({
+  args: {
+    roomId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const room = await ctx.db
+      .query("rooms")
+      .withIndex("by_name", (q) => q.eq("name", args.roomId))
+      .first();
+    if (!room) return null;
+    const creator = room.createdBy
+      ? await ctx.db.get("users", room.createdBy)
+      : null;
+    return {
+      _id: room._id,
+      name: room.name,
+      createdBy: room.createdBy,
+      creatorName: creator?.name || creator?.email || null,
+    };
+  },
+});
+
 export const sendMessage = mutation({
   args: {
+    roomId: v.string(),
     content: v.string(),
   },
   handler: async (ctx, args) => {
@@ -11,20 +59,42 @@ export const sendMessage = mutation({
     if (!senderId) {
       throw new Error("User not found");
     }
+    const room = await ctx.db
+      .query("rooms")
+      .withIndex("by_name", (q) => q.eq("name", args.roomId))
+      .first();
+    if (!room) {
+      throw new Error("Room not found");
+    }
     await ctx.db.insert("chatMessage", {
       senderId,
       content: args.content,
+      room: room._id,
     });
   },
 });
 
 export const listMessages = query({
-  handler: async (ctx) => {
+  args: {
+    roomId: v.string(),
+  },
+  handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) {
       throw new Error("User not found");
     }
-    const messages = await ctx.db.query("chatMessage").order("desc").take(100);
+    const room = await ctx.db
+      .query("rooms")
+      .withIndex("by_name", (q) => q.eq("name", args.roomId))
+      .first();
+    if (!room) {
+      throw new Error("Room not found");
+    }
+    const messages = await ctx.db
+      .query("chatMessage")
+      .withIndex("by_room", (q) => q.eq("room", room._id))
+      .order("desc")
+      .take(100);
 
     // Batch user lookups: fetch each unique sender once instead of per-message
     const senderIds = [

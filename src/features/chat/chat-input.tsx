@@ -10,7 +10,7 @@ import { useConvexMutation } from "@convex-dev/react-query";
 import { api } from "../../../convex/_generated/api";
 import { Send } from "pixelarticons/react";
 
-export function ChatInput() {
+export function ChatInput({ roomId }: { roomId: string }) {
   const sendMessage = useMutation({
     mutationFn: useConvexMutation(api.functions.chat.sendMessage),
   });
@@ -21,7 +21,7 @@ export function ChatInput() {
     },
     onSubmit: async ({ value }) => {
       if (!value.content.trim()) return;
-      await sendMessage.mutateAsync({ content: value.content.trim() });
+      await sendMessage.mutateAsync({ content: value.content.trim(), roomId });
       form.reset();
     },
   });

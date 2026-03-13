@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Tooltip } from "@base-ui/react/tooltip";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { ConvexReactClient } from "convex/react";
@@ -23,11 +24,13 @@ convexQueryClient.connect(queryClient);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <ConvexAuthProvider client={convex}>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </ConvexAuthProvider>
+      <Tooltip.Provider delay={150}>
+        <ConvexAuthProvider client={convex}>
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
+        </ConvexAuthProvider>
+      </Tooltip.Provider>
     </ThemeProvider>
   </StrictMode>,
 );

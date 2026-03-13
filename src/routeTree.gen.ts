@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as _authenticatedRouteRouteImport } from './routes/(_authenticated)/route'
 import { Route as _authRouteRouteImport } from './routes/(_auth)/route'
 import { Route as _authenticatedIndexRouteImport } from './routes/(_authenticated)/index'
+import { Route as _authenticatedCreateRoomRouteImport } from './routes/(_authenticated)/create-room'
 import { Route as _authRegisterRouteImport } from './routes/(_auth)/register'
 import { Route as _authLoginRouteImport } from './routes/(_auth)/login'
+import { Route as _authenticatedRoomsRoomRouteImport } from './routes/(_authenticated)/rooms/$room'
 
 const _authenticatedRouteRoute = _authenticatedRouteRouteImport.update({
   id: '/(_authenticated)',
@@ -28,6 +30,12 @@ const _authenticatedIndexRoute = _authenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => _authenticatedRouteRoute,
 } as any)
+const _authenticatedCreateRoomRoute =
+  _authenticatedCreateRoomRouteImport.update({
+    id: '/create-room',
+    path: '/create-room',
+    getParentRoute: () => _authenticatedRouteRoute,
+  } as any)
 const _authRegisterRoute = _authRegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -38,16 +46,25 @@ const _authLoginRoute = _authLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => _authRouteRoute,
 } as any)
+const _authenticatedRoomsRoomRoute = _authenticatedRoomsRoomRouteImport.update({
+  id: '/rooms/$room',
+  path: '/rooms/$room',
+  getParentRoute: () => _authenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof _authLoginRoute
   '/register': typeof _authRegisterRoute
+  '/create-room': typeof _authenticatedCreateRoomRoute
   '/': typeof _authenticatedIndexRoute
+  '/rooms/$room': typeof _authenticatedRoomsRoomRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof _authLoginRoute
   '/register': typeof _authRegisterRoute
+  '/create-room': typeof _authenticatedCreateRoomRoute
   '/': typeof _authenticatedIndexRoute
+  '/rooms/$room': typeof _authenticatedRoomsRoomRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -55,20 +72,24 @@ export interface FileRoutesById {
   '/(_authenticated)': typeof _authenticatedRouteRouteWithChildren
   '/(_auth)/login': typeof _authLoginRoute
   '/(_auth)/register': typeof _authRegisterRoute
+  '/(_authenticated)/create-room': typeof _authenticatedCreateRoomRoute
   '/(_authenticated)/': typeof _authenticatedIndexRoute
+  '/(_authenticated)/rooms/$room': typeof _authenticatedRoomsRoomRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/register' | '/'
+  fullPaths: '/login' | '/register' | '/create-room' | '/' | '/rooms/$room'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/'
+  to: '/login' | '/register' | '/create-room' | '/' | '/rooms/$room'
   id:
     | '__root__'
     | '/(_auth)'
     | '/(_authenticated)'
     | '/(_auth)/login'
     | '/(_auth)/register'
+    | '/(_authenticated)/create-room'
     | '/(_authenticated)/'
+    | '/(_authenticated)/rooms/$room'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -99,6 +120,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof _authenticatedIndexRouteImport
       parentRoute: typeof _authenticatedRouteRoute
     }
+    '/(_authenticated)/create-room': {
+      id: '/(_authenticated)/create-room'
+      path: '/create-room'
+      fullPath: '/create-room'
+      preLoaderRoute: typeof _authenticatedCreateRoomRouteImport
+      parentRoute: typeof _authenticatedRouteRoute
+    }
     '/(_auth)/register': {
       id: '/(_auth)/register'
       path: '/register'
@@ -112,6 +140,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof _authLoginRouteImport
       parentRoute: typeof _authRouteRoute
+    }
+    '/(_authenticated)/rooms/$room': {
+      id: '/(_authenticated)/rooms/$room'
+      path: '/rooms/$room'
+      fullPath: '/rooms/$room'
+      preLoaderRoute: typeof _authenticatedRoomsRoomRouteImport
+      parentRoute: typeof _authenticatedRouteRoute
     }
   }
 }
@@ -131,11 +166,15 @@ const _authRouteRouteWithChildren = _authRouteRoute._addFileChildren(
 )
 
 interface _authenticatedRouteRouteChildren {
+  _authenticatedCreateRoomRoute: typeof _authenticatedCreateRoomRoute
   _authenticatedIndexRoute: typeof _authenticatedIndexRoute
+  _authenticatedRoomsRoomRoute: typeof _authenticatedRoomsRoomRoute
 }
 
 const _authenticatedRouteRouteChildren: _authenticatedRouteRouteChildren = {
+  _authenticatedCreateRoomRoute: _authenticatedCreateRoomRoute,
   _authenticatedIndexRoute: _authenticatedIndexRoute,
+  _authenticatedRoomsRoomRoute: _authenticatedRoomsRoomRoute,
 }
 
 const _authenticatedRouteRouteWithChildren =

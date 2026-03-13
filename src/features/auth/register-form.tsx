@@ -1,6 +1,6 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useForm } from "@tanstack/react-form";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 
@@ -23,26 +23,10 @@ const registerSchema = z
     path: ["confirmPassword"],
   });
 
-function validateRegisterForm({
-  value,
-}: {
-  value: { email: string; password: string; confirmPassword: string };
-}) {
-  const result = registerSchema.safeParse(value);
-  if (!result.success) {
-    const flattened = result.error.flatten();
-    const fields: Record<string, string> = {};
-    for (const [key, messages] of Object.entries(flattened.fieldErrors)) {
-      if (messages?.[0]) fields[key] = messages[0];
-    }
-    return { fields };
-  }
-  return undefined;
-}
-
 export function RegisterForm() {
   const { signIn } = useAuthActions();
   const navigate = useNavigate();
+  const search = useSearch({ from: "/(_auth)/register" });
   const [error, setError] = useState<string | null>(null);
   const [emailVerificationSent, setEmailVerificationSent] = useState<
     string | null
@@ -55,7 +39,7 @@ export function RegisterForm() {
       confirmPassword: "",
     },
     validators: {
-      onSubmit: validateRegisterForm,
+      onSubmit: registerSchema,
     },
     onSubmit: async ({
       value,
@@ -71,7 +55,7 @@ export function RegisterForm() {
       try {
         const result = await signIn("password", formData);
         if (result?.signingIn) {
-          navigate({ to: "/" });
+          navigate({ to: search.from ?? "/" });
         } else {
           setEmailVerificationSent(value.email);
         }
@@ -84,7 +68,7 @@ export function RegisterForm() {
   return (
     <main className="h-svh flex flex-col items-center justify-center">
       <div className="flex flex-col gap-8 w-96 mx-auto">
-        <h1 className="text-2xl font-bold text-center">8-bit Chat</h1>
+        <h1 className="text-4xl font-bold text-center">8-bit Chat</h1>
         <form
           id="register-form"
           onSubmit={(e) => {
@@ -155,6 +139,7 @@ export function RegisterForm() {
               <span>Already have an account?</span>
               <Link
                 to="/login"
+                search={{ from: search.from }}
                 className="text-primary underline decoration-2 hover:no-underline cursor-pointer"
               >
                 Log in instead
@@ -165,8 +150,8 @@ export function RegisterForm() {
                 <p className="font-medium">Check your email</p>
                 <p className="text-base-content/80 text-sm mt-1">
                   We sent a verification link to{" "}
-                  <strong>{emailVerificationSent}</strong>. Click the link in the
-                  email to complete your registration.
+                  <strong>{emailVerificationSent}</strong>. Click the link in
+                  the email to complete your registration.
                 </p>
               </div>
             )}

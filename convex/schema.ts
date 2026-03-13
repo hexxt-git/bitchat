@@ -10,5 +10,10 @@ export default defineSchema({
   chatMessage: defineTable({
     senderId: v.id("users"),
     content: v.string(),
-  }),
+    room: v.id("rooms"),
+  }).index("by_room", ["room"]),
+  rooms: defineTable({
+    name: v.string(),
+    createdBy: v.optional(v.id("users")),
+  }).index("by_name", ["name"]),
 });

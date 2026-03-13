@@ -17,7 +17,7 @@ function AuthenticatedLayout() {
   }
 
   if (!auth.isAuthenticated) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" search={{ from: window.location.pathname }} />;
   }
 
   return <Outlet />;

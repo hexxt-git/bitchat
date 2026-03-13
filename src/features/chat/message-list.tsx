@@ -11,9 +11,13 @@ type Message = {
   content: string;
 };
 
-export function MessageList() {
+export function MessageList({ roomId }: { roomId: string }) {
   const user = useQuery(convexQuery(api.functions.auth.getUser));
-  const messagesQuery = useQuery(convexQuery(api.functions.chat.listMessages));
+  const messagesQuery = useQuery(
+    convexQuery(api.functions.chat.listMessages, {
+      roomId,
+    }),
+  );
 
   if (!user.data?._id) {
     return <div className="flex-1 min-h-0 min-w-0" />;
@@ -53,9 +57,7 @@ function MessageListInner({
       {messages.map((message) => (
         <div key={message._id} className="min-w-0 wrap-break-word">
           <span
-            className={cn(
-              message.senderEmail === ownerEmail && "text-accent",
-            )}
+            className={cn(message.senderEmail === ownerEmail && "text-accent")}
           >
             {message.senderEmail ?? message.senderName ?? "Unknown"}:{" "}
           </span>
