@@ -15,5 +15,6 @@ export default defineSchema({
   rooms: defineTable({
     name: v.string(),
     createdBy: v.optional(v.id("users")),
+    public: v.optional(v.boolean()),
   }).index("by_name", ["name"]),
 });

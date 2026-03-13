@@ -12,7 +12,7 @@
 }
 
 :root {
-  /* 8-bit aesthetic: pure white/black only */
+  /* bit aesthetic: pure white/black only */
   --base-100: oklch(1 0 0);
   --base-200: oklch(0.93 0 0);
   --base-300: oklch(0.75 0 0);
@@ -48,7 +48,7 @@
 }
 
 .dark {
-  /* 8-bit dark: pure black/white */
+  /* bit dark: pure black/white */
   --base-100: oklch(0 0 0);
   --base-200: oklch(0.18 0 0);
   --base-300: oklch(0.28 0 0);

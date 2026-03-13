@@ -5,6 +5,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 export const createRoom = mutation({
   args: {
     name: v.string(),
+    public: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     await getAuthUserId(ctx);
@@ -23,6 +24,7 @@ export const createRoom = mutation({
     return await ctx.db.insert("rooms", {
       name,
       createdBy: userId ?? undefined,
+      public: args.public,
     });
   },
 });

@@ -42,7 +42,7 @@ export function Chat({ roomId }: { roomId: string }) {
       {/* Main chat area */}
       <div className="flex flex-col min-w-0 min-h-0 flex-1">
         <header className="shrink-0 px-4 py-2 flex items-center justify-between gap-2">
-          <h1 className="text-xl font-bold flex-1">8-bit Chat</h1>
+          <h1 className="text-xl font-bold flex-1">Bit Chat</h1>
           <div className="flex items-center gap-0.5">
             <Button
               variant="ghost"

@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { steps } from "motion";
 
 /**
- * 8-bit style auth loading indicator.
+ * bit style auth loading indicator.
  * Bouncing pixel blocks with stepped animation for a retro feel.
  */
 export function AuthLoadingIndicator() {
