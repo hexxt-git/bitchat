@@ -1,6 +1,6 @@
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { Field, useForm } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
@@ -11,7 +11,7 @@ import {
   FormInput,
   InputGroupAddon,
 } from "@/features/shared/components/ui";
-import { Attachment, Message } from "pixelarticons/react";
+import { Attachment } from "pixelarticons/react";
 import { getErrorMessage } from "@/features/shared/lib/utils";
 
 const createRoomSchema = z.object({
