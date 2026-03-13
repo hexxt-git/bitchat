@@ -73,9 +73,7 @@ export function CreateRoomForm() {
         </Button>
         {error && (
           <div className="bg-destructive-subtle border border-destructive-border p-2">
-            <p className="text-destructive font-mono text-xs">
-              Error: {error}
-            </p>
+            <p className="text-destructive font-mono text-xs">Error: {error}</p>
           </div>
         )}
       </FieldGroup>

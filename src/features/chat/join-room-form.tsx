@@ -77,7 +77,10 @@ export function JoinRoomForm() {
         <Button
           type="submit"
           form="join-room-form"
-          disabled={form.state.isSubmitting || (roomToJoin !== null && roomQuery.isFetching)}
+          disabled={
+            form.state.isSubmitting ||
+            (roomToJoin !== null && roomQuery.isFetching)
+          }
         >
           {roomToJoin !== null && roomQuery.isFetching
             ? "Joining..."

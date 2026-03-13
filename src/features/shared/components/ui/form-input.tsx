@@ -1,6 +1,16 @@
 import * as React from "react";
 
 import { cn } from "@/features/shared/lib/utils";
+import {
+  Field,
+  FieldError,
+  FieldLabel,
+} from "@/features/shared/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/features/shared/components/ui/input-group";
 
 /** Icon component type - accepts className and SVG props (e.g. pixelarticons) */
 export type IconComponent = React.ComponentType<
@@ -23,11 +33,10 @@ export interface FormFieldLike {
   handleChange: (value: string) => void;
 }
 
-export interface FormInputProps
-  extends Omit<
-    React.ComponentProps<"input">,
-    "value" | "onChange" | "onBlur" | "name" | "id"
-  > {
+export interface FormInputProps extends Omit<
+  React.ComponentProps<"input">,
+  "value" | "onChange" | "onBlur" | "name" | "id"
+> {
   field: FormFieldLike;
   label?: string;
   leftIcon?: IconComponent;
@@ -47,45 +56,37 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
       autoComplete,
       ...inputProps
     },
-    ref
+    ref,
   ) => {
     const inputId = field.name;
-    const derivedAutoComplete =
-      autoComplete ?? defaultAutoComplete[field.name];
+    const derivedAutoComplete = autoComplete ?? defaultAutoComplete[field.name];
     const isInvalid =
       field.state.meta.isTouched && field.state.meta.errors.length > 0;
     const errors = isInvalid
       ? field.state.meta.errors.filter(
-          (e): e is string => typeof e === "string"
+          (e): e is string => typeof e === "string",
         )
       : [];
     const hasError = errors.length > 0;
 
     return (
-      <div
+      <Field
         data-slot="form-input"
-        className={cn("flex flex-col gap-1.5", containerClassName)}
+        className={cn(undefined, containerClassName)}
       >
-        {label && (
-          <label
-            htmlFor={inputId}
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            {label}
-          </label>
-        )}
-        <div
+        {label && <FieldLabel htmlFor={inputId}>{label}</FieldLabel>}
+        <InputGroup
           className={cn(
-            "flex h-9 w-full overflow-hidden border-2 border-foreground bg-base-100 text-base transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:outline-none",
-            hasError && "border-destructive"
+            "focus-within:ring-2 focus-within:ring-ring focus-within:outline-none",
+            hasError && "border-destructive",
           )}
         >
           {leftIcon && (
-            <span className="flex shrink-0 items-center px-3 text-base-content [&_svg]:size-4">
+            <InputGroupAddon className="px-3">
               {React.createElement(leftIcon, { className: "size-4" })}
-            </span>
+            </InputGroupAddon>
           )}
-          <input
+          <InputGroupInput
             ref={ref}
             id={inputId}
             name={field.name}
@@ -94,29 +95,27 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
             onChange={(e) => field.handleChange(e.target.value)}
             data-slot="form-input-field"
             className={cn(
-              "flex flex-1 min-w-0 bg-base-100 px-3 py-1 text-base outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-base-content disabled:cursor-not-allowed disabled:opacity-50 border-0",
+              "min-w-0 bg-base-100",
               !leftIcon && "pl-3",
               !rightIcon && "pr-3",
               leftIcon && "pl-0",
               rightIcon && "pr-0",
-              className
+              className,
             )}
             aria-invalid={hasError}
             autoComplete={derivedAutoComplete}
             {...inputProps}
           />
           {rightIcon && (
-            <span className="flex shrink-0 items-center px-3 text-base-content [&_svg]:size-4">
+            <InputGroupAddon align="inline-end" className="px-3">
               {React.createElement(rightIcon, { className: "size-4" })}
-            </span>
+            </InputGroupAddon>
           )}
-        </div>
-        {hasError && (
-          <p className="text-sm text-destructive">{errors.join(", ")}</p>
-        )}
-      </div>
+        </InputGroup>
+        <FieldError errors={errors} />
+      </Field>
     );
-  }
+  },
 );
 
 FormInput.displayName = "FormInput";

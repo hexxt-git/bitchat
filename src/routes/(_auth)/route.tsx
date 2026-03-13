@@ -22,14 +22,14 @@ function RouteComponent() {
   }
 
   return (
-    <>
+    <div className="relative min-h-svh w-full">
       <AuthBackground />
       <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
         <ThemeToggle />
       </div>
-      <div className="relative z-10">
+      <div className="relative z-10 min-h-svh flex flex-col items-center justify-center px-4 py-8">
         <Outlet />
       </div>
-    </>
+    </div>
   );
 }

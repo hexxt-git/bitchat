@@ -59,8 +59,8 @@ export function LoginForm() {
   });
 
   return (
-    <main className="h-svh flex flex-col items-center justify-center">
-      <div className="flex flex-col gap-8 w-96 mx-auto">
+    <main className="w-full max-w-md min-w-0">
+      <div className="flex flex-col gap-8">
         <h1 className="text-4xl font-bold text-center">8-bit Chat</h1>
         <form
           id="login-form"
@@ -114,7 +114,7 @@ export function LoginForm() {
             >
               Sign in with Google
             </Button>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row flex-wrap gap-2">
               <span>Don&apos;t have an account?</span>
               <Link
                 to="/register"

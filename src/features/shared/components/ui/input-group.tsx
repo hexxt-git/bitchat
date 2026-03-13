@@ -26,7 +26,7 @@ const InputGroupInput = React.forwardRef<
     ref={ref}
     data-slot="input-group-input"
     className={cn(
-      "flex flex-1 bg-transparent px-3 py-1 text-base outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-base-content disabled:cursor-not-allowed disabled:opacity-50 border-0",
+      "flex flex-1 bg-transparent px-3 py-1 text-base outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-base-content/50 disabled:cursor-not-allowed disabled:opacity-50 border-0",
       className,
     )}
     {...props}
@@ -42,7 +42,7 @@ const InputGroupTextarea = React.forwardRef<
     ref={ref}
     data-slot="input-group-textarea"
     className={cn(
-      "flex min-h-9 w-full flex-1 resize-none bg-base-100 px-3 py-2 text-base outline-none placeholder:text-base-content disabled:cursor-not-allowed disabled:opacity-50",
+      "flex min-h-9 w-full flex-1 resize-none bg-base-100 px-3 py-2 text-base outline-none placeholder:text-base-content/50 disabled:cursor-not-allowed disabled:opacity-50",
       className,
     )}
     {...props}
