@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <rect width="16" height="16" fill="white"/>
+  <!-- Pixel art ":D" rotated sideways - colon left, D-mouth right (shifted 1px right, hollow mouth) -->
+  <!-- Eyes (the ":") - stacked vertically -->
+  <rect x="4" y="5" width="2" height="2" fill="currentColor"/>
+  <rect x="4" y="9" width="2" height="2" fill="currentColor"/>
+  <!-- Mouth (the "D") - hollow outline: flat left, curved right -->
+  <!-- Left edge -->
+  <rect x="8" y="5" width="1" height="1" fill="currentColor"/>
+  <rect x="8" y="6" width="1" height="1" fill="currentColor"/>
+  <rect x="8" y="7" width="1" height="1" fill="currentColor"/>
+  <rect x="8" y="8" width="1" height="1" fill="currentColor"/>
+  <rect x="8" y="9" width="1" height="1" fill="currentColor"/>
+  <rect x="8" y="10" width="1" height="1" fill="currentColor"/>
+  <!-- Top edge -->
+  <rect x="9" y="5" width="1" height="1" fill="currentColor"/>
+  <rect x="10" y="5" width="1" height="1" fill="currentColor"/>
+  <!-- Right curve -->
+  <rect x="11" y="6" width="1" height="1" fill="currentColor"/>
+  <rect x="12" y="7" width="1" height="1" fill="currentColor"/>
+  <rect x="12" y="8" width="1" height="1" fill="currentColor"/>
+  <rect x="11" y="9" width="1" height="1" fill="currentColor"/>
+  <!-- Bottom edge -->
+  <rect x="9" y="10" width="1" height="1" fill="currentColor"/>
+  <rect x="10" y="10" width="1" height="1" fill="currentColor"/>
+</svg>

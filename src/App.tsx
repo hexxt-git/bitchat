@@ -1,16 +1,6 @@
-import { Authenticated, Unauthenticated } from "convex/react";
-import { SignInForm } from "./components/SignInForm";
-import { Content } from "./components/Content";
+import { RouterProvider } from "@tanstack/react-router";
+import { router } from "./router";
 
 export default function App() {
-  return (
-    <>
-      <Authenticated>
-        <Content />
-      </Authenticated>
-      <Unauthenticated>
-        <SignInForm />
-      </Unauthenticated>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
