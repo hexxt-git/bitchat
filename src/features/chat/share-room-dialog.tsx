@@ -45,7 +45,7 @@ export function ShareRoomDialog({ open, url, onClose }: ShareRoomDialogProps) {
             onClick={onClose}
             aria-label="Close share dialog"
           >
-            <Cancel className="size-5" />
+            <Cancel />
           </Button>
         </div>
         <p className="text-sm text-base-content/80">

@@ -9,7 +9,8 @@ type Message = {
   _creationTime: number;
   senderEmail: string | null;
   senderName: string | null;
-  content: string;
+  content?: string;
+  file?: string | null;
 };
 
 export function MessageList({ roomId }: { roomId: string }) {
@@ -71,6 +72,13 @@ function MessageListInner({
             </span>
           </span>
           {message.content}
+          {message.file && (
+            <img
+              src={message.file}
+              alt="File"
+              className="w-full max-w-xs max-h-xs object-contain"
+            />
+          )}
         </div>
       ))}
     </div>

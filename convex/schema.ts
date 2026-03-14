@@ -9,8 +9,9 @@ export default defineSchema({
   ...authTables,
   chatMessage: defineTable({
     senderId: v.id("users"),
-    content: v.string(),
+    content: v.optional(v.string()),
     room: v.id("rooms"),
+    file: v.optional(v.id("_storage")),
   }).index("by_room", ["room"]),
   rooms: defineTable({
     name: v.string(),

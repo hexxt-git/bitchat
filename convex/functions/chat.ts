@@ -76,6 +76,38 @@ export const sendMessage = mutation({
   },
 });
 
+export const generateFileUploadUrl = mutation({
+  handler: async (ctx) => {
+    const senderId = await getAuthUserId(ctx);
+    if (!senderId) {
+      throw new Error("User not found");
+    }
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
+export const sendFile = mutation({
+  args: { roomId: v.string(), fileId: v.id("_storage") },
+  handler: async (ctx, args) => {
+    const senderId = await getAuthUserId(ctx);
+    if (!senderId) {
+      throw new Error("User not found");
+    }
+    const room = await ctx.db
+      .query("rooms")
+      .withIndex("by_name", (q) => q.eq("name", args.roomId))
+      .first();
+    if (!room) {
+      throw new Error("Room not found");
+    }
+    await ctx.db.insert("chatMessage", {
+      senderId,
+      room: room._id,
+      file: args.fileId,
+    });
+  },
+});
+
 export const listMessages = query({
   args: {
     roomId: v.string(),
@@ -112,14 +144,20 @@ export const listMessages = query({
     );
 
     return {
-      messages: messages.map((message) => {
-        const user = message.senderId ? userMap.get(message.senderId) : null;
-        return {
-          ...message,
-          senderEmail: user?.email ?? null,
-          senderName: user?.name ?? null,
-        };
-      }),
+      messages: await Promise.all(
+        messages.map(async (message) => {
+          const user = message.senderId ? userMap.get(message.senderId) : null;
+          const file = message.file
+            ? await ctx.storage.getUrl(message.file)
+            : null;
+          return {
+            ...message,
+            file: file ?? null,
+            senderEmail: user?.email ?? null,
+            senderName: user?.name ?? null,
+          };
+        }),
+      ),
       users: Array.from(userMap),
     };
   },

@@ -6,8 +6,7 @@ const FALLBACK_DATA_URL =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
 
 /**
- * 8x8 Bayer matrix - 65 intensity levels for a smoother dithered gradient.
- * Single-pass O(n) algorithm.
+ * 8x8 Bayer matrix
  */
 const BAYER_8X8 = [
   [0, 32, 8, 40, 2, 34, 10, 42],
@@ -22,10 +21,6 @@ const BAYER_8X8 = [
 
 const BAYER_MAX = 64;
 
-/**
- * Superellipse (squircle): smooth rounded shape, n=2.5 for soft corners.
- * Returns insideness: 1 at center, 0 at edge, negative outside.
- */
 function superellipseSdf(
   x: number,
   y: number,
@@ -45,34 +40,49 @@ function generateDitheredIslandDataUrl(
   edgeWidth: number,
 ): string {
   const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = Math.max(1, Math.floor(width));
+  canvas.height = Math.max(1, Math.floor(height));
   const ctx = canvas.getContext("2d")!;
-  const imageData = ctx.createImageData(width, height);
+  const imageData = ctx.createImageData(canvas.width, canvas.height);
   const data = imageData.data;
 
-  const cx = width / 2;
-  const cy = height / 2;
-  const rx = width * islandSize;
-  const ry = height * islandSize;
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const rx = canvas.width * islandSize;
+  const ry = canvas.height * islandSize;
   const margin = edgeWidth;
 
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
+  // precompute for speed
+  const w = canvas.width;
+  const h = canvas.height;
+  const invTwoMargin = 1 / (2 * margin);
+
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
       const sdf = superellipseSdf(x - cx, y - cy, rx, ry, 4.5);
 
       let v: number;
       if (sdf > margin) {
+        // clearly inside
         v = 255;
       } else if (sdf < -margin) {
+        // clearly outside
         v = 0;
       } else {
-        const gradientValue = (margin - sdf) / (2 * margin);
-        const bayerThreshold = BAYER_8X8[y % 8][x % 8] / BAYER_MAX;
-        v = gradientValue < bayerThreshold ? 255 : 0;
+        // map [-margin, margin] -> [0, 1]
+        let gradientValue = (sdf + margin) * invTwoMargin;
+        // clamp to [0,1] for safety
+        if (gradientValue < 0) gradientValue = 0;
+        else if (gradientValue > 1) gradientValue = 1;
+
+        // Bayer threshold normalized with 0.5 offset to reduce bias
+        const bayerThreshold = (BAYER_8X8[y % 8][x % 8] + 0.5) / BAYER_MAX;
+
+        // if gradient is greater than threshold we paint inside (white)
+        v = gradientValue > bayerThreshold ? 255 : 0;
       }
 
-      const i = (y * width + x) * 4;
+      const i = (y * w + x) * 4;
       data[i] = v;
       data[i + 1] = v;
       data[i + 2] = v;
@@ -84,76 +94,85 @@ function generateDitheredIslandDataUrl(
   return canvas.toDataURL("image/png");
 }
 
-/**
- * Auth page background: organic island shape (white) on black.
- * Uses viewport dimensions minus a few dozen pixels. Dithering only at the island edge.
- */
 export function AuthBackground() {
   const [dims, setDims] = useState(() => {
     if (typeof window === "undefined") return { w: 1024, h: 1024 };
+
     return {
       w: Math.max(1, window.innerWidth),
       h: Math.max(1, window.innerHeight),
     };
   });
+
   const [displayOpacity, setDisplayOpacity] = useState(1);
   const [displayDataUrl, setDisplayDataUrl] = useState(FALLBACK_DATA_URL);
+
   const { resolvedTheme } = useTheme();
+
   const invert = resolvedTheme === "dark";
 
   const islandSize = invert ? 0.7 : 0.55;
   const edgeWidth = invert ? 0.32 : 0.3;
 
   const dataUrl = useMemo(() => {
-    if (typeof document === "undefined") return FALLBACK_DATA_URL;
-    const pixelScale = 1.35;
-    return generateDitheredIslandDataUrl(
-      Math.floor(dims.w / pixelScale),
-      Math.floor(dims.h / pixelScale),
-      islandSize,
-      edgeWidth,
-    );
+    if (typeof window === "undefined") return FALLBACK_DATA_URL;
+
+    const dpr = window.devicePixelRatio || 1;
+
+    // integer scaling prevents fractional pixel stretching
+    const pixelScale = Math.min(3.5, Math.max(1, Math.round(2 * dpr)));
+
+    const w = Math.ceil(dims.w / pixelScale);
+    const h = Math.ceil(dims.h / pixelScale);
+
+    return generateDitheredIslandDataUrl(w, h, islandSize, edgeWidth);
   }, [dims.w, dims.h, islandSize, edgeWidth]);
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
+
     const update = () => {
       clearTimeout(timeout);
-      timeout = setTimeout(
-        () =>
-          setDims({
-            w: Math.max(1, window.innerWidth),
-            h: Math.max(1, window.innerHeight),
-          }),
-        150,
-      );
+
+      timeout = setTimeout(() => {
+        setDims({
+          w: Math.max(1, window.innerWidth),
+          h: Math.max(1, window.innerHeight),
+        });
+      }, 150);
     };
+
     update();
+
     window.addEventListener("resize", update);
+
     return () => {
       clearTimeout(timeout);
       window.removeEventListener("resize", update);
     };
   }, []);
 
-  // Crossfade when dataUrl changes (theme, resize) to avoid snapping
   useEffect(() => {
     if (dataUrl === displayDataUrl) {
       setDisplayOpacity(1);
       return;
     }
-    // Initial load: show immediately
+
     const isInitial = displayDataUrl === FALLBACK_DATA_URL;
+
     if (isInitial) {
       setDisplayDataUrl(dataUrl);
       setDisplayOpacity(1);
       return;
     }
+
     setDisplayOpacity(0);
+
     const t = setTimeout(() => {
       setDisplayDataUrl(dataUrl);
       requestAnimationFrame(() => setDisplayOpacity(1));
     }, 150);
+
     return () => clearTimeout(t);
   }, [dataUrl, displayDataUrl]);
 

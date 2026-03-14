@@ -52,14 +52,14 @@ export function Chat({ roomId }: { roomId: string }) {
               onClick={() => setShareOpen(true)}
               aria-label="Share room"
             >
-              <UserPlus className="size-5" />
+              <UserPlus />
             </Button>
             <Button
               variant="ghost"
               size="icon"
               render={<Link to="/settings" />}
             >
-              <Settings2 className="size-5" />
+              <Settings2 />
             </Button>
 
             <Button
@@ -69,7 +69,7 @@ export function Chat({ roomId }: { roomId: string }) {
               onClick={() => setSidebarOpen(true)}
               aria-label="Open room list"
             >
-              <Menu className="size-5" />
+              <Menu />
             </Button>
           </div>
         </header>
@@ -103,7 +103,7 @@ export function Chat({ roomId }: { roomId: string }) {
                 onClick={() => setSidebarOpen(false)}
                 aria-label="Close"
               >
-                <Cancel className="size-5" />
+                <Cancel />
               </Button>
             </div>
             <div className="flex-1 min-h-0">

@@ -27,7 +27,7 @@ function CreateRoomPage() {
           onClick={() => void signOut()}
           className="flex items-center gap-2"
         >
-          <Logout className="size-4" />
+          <Logout/>
           Sign out
         </Button>
       </div>
