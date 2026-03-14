@@ -15,7 +15,6 @@ import { InfoBox } from "pixelarticons/react";
 export function ParticipantsList({ roomId }: { roomId: string }) {
   const user = useQuery(convexQuery(api.functions.auth.getUser));
   const room = useQuery(convexQuery(api.functions.chat.getRoom, { roomId }));
-  const createdById = room.data?.createdBy ?? null;
   const creatorName = room.data?.creatorName;
 
   console.log(room.data);
