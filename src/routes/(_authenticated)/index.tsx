@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { JoinRoomForm } from "@/features/chat/join-room-form";
 import { Button } from "@/features/shared/components/ui/button";
-import { Logout } from "pixelarticons/react";
+import { Logout, Settings2 } from "pixelarticons/react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { ThemeToggle } from "@/features/shared/components/theme-toggle";
 import { AuthBackground } from "@/features/auth/auth-background";
+import { useQuery } from "@tanstack/react-query";
+import { convexQuery } from "@convex-dev/react-query";
+import { api } from "../../../convex/_generated/api";
 
 export const Route = createFileRoute("/(_authenticated)/")({
   component: IndexPage,
@@ -12,6 +15,7 @@ export const Route = createFileRoute("/(_authenticated)/")({
 
 function IndexPage() {
   const { signOut } = useAuthActions();
+  const userQuery = useQuery(convexQuery(api.functions.auth.getUser));
 
   return (
     <div className="relative min-h-svh w-full">
@@ -20,10 +24,18 @@ function IndexPage() {
         <ThemeToggle />
         <Button
           variant="outline"
+          size="icon"
+          nativeButton={false}
+          aria-label="Open settings"
+        >
+          <Settings2 />
+        </Button>
+        <Button
+          variant="outline"
           onClick={() => void signOut()}
           className="flex items-center gap-2"
         >
-          <Logout className="size-4" />
+          <Logout />
           Sign out
         </Button>
       </div>
@@ -33,7 +45,9 @@ function IndexPage() {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <p className="text-center text-base-content/80">
-                Enter a room name to join
+                Signed in as{" "}
+                {userQuery.data?.name || userQuery.data?.email || "Loading..."},
+                Enter a room name to join or create a new one
               </p>
               <JoinRoomForm />
             </div>

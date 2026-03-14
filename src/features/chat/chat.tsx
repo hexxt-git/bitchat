@@ -4,7 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { MessageList } from "./message-list";
 import { ChatInput } from "./chat-input";
-import { Menu, Cancel, UserPlus } from "pixelarticons/react";
+import { Menu, Cancel, UserPlus, Settings2 } from "pixelarticons/react";
 import { Button } from "../shared/components/ui/button";
 import { api } from "../../../convex/_generated/api";
 import { ChatSidebar } from "./chat-sidebar";
@@ -42,7 +42,9 @@ export function Chat({ roomId }: { roomId: string }) {
       {/* Main chat area */}
       <div className="flex flex-col min-w-0 min-h-0 flex-1">
         <header className="shrink-0 px-4 py-2 flex items-center justify-between gap-2">
-          <h1 className="text-xl font-bold flex-1">BitChat</h1>
+          <Link to="/">
+            <h1 className="text-xl font-bold flex-1">BitChat</h1>
+          </Link>
           <div className="flex items-center gap-0.5">
             <Button
               variant="ghost"
@@ -52,6 +54,14 @@ export function Chat({ roomId }: { roomId: string }) {
             >
               <UserPlus className="size-5" />
             </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              render={<Link to="/settings" />}
+            >
+              <Settings2 className="size-5" />
+            </Button>
+
             <Button
               variant="ghost"
               size="icon"

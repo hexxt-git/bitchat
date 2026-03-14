@@ -6,6 +6,7 @@ import { api } from "../../../convex/_generated/api";
 
 type Message = {
   _id: string;
+  _creationTime: number;
   senderEmail: string | null;
   senderName: string | null;
   content: string;
@@ -57,9 +58,17 @@ function MessageListInner({
       {messages.map((message) => (
         <div key={message._id} className="min-w-0 wrap-break-word">
           <span
-            className={cn(message.senderEmail === ownerEmail && "text-accent")}
+            className={cn(
+              "max-md:block max-md:text-xs -mb-1",
+              message.senderEmail === ownerEmail
+                ? "text-accent"
+                : "text-base-content/70",
+            )}
           >
-            {message.senderEmail ?? message.senderName ?? "Unknown"}:{" "}
+            {message.senderName ?? message.senderEmail ?? "Unknown"}{" "}
+            <span className="font-title text-xs max-md:text-[0.6rem]">
+              ({new Date(message._creationTime).toLocaleTimeString()}):{" "}
+            </span>
           </span>
           {message.content}
         </div>

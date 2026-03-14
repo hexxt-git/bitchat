@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CreateRoomForm } from "@/features/chat/create-room-form";
 import { Button } from "@/features/shared/components/ui/button";
-import { Logout } from "pixelarticons/react";
+import { Logout, Settings2 } from "pixelarticons/react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { ThemeToggle } from "@/features/shared/components/theme-toggle";
 import { AuthBackground } from "@/features/auth/auth-background";
@@ -18,6 +18,10 @@ function CreateRoomPage() {
       <AuthBackground />
       <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
         <ThemeToggle />
+        <Button variant="outline" size="icon" render={<Link to="/settings" />}>
+          <Settings2 />
+        </Button>
+
         <Button
           variant="outline"
           onClick={() => void signOut()}

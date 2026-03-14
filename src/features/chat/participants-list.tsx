@@ -76,7 +76,6 @@ function ParticipantsListInner({
 
   return participants.map(({ _id, email, name, isOnline, lastSeen }) => {
     const displayName = email || name || "Unknown";
-    const isCreator = createdById === _id;
 
     return (
       <div
@@ -89,11 +88,6 @@ function ParticipantsListInner({
         <span className="min-w-0 flex-1 truncate">
           {userId === _id && <span className="text-xs text-accent">&gt; </span>}
           {displayName}
-          {isCreator && (
-            <span className="text-accent text-xs ml-1" title="Room creator">
-              (creator)
-            </span>
-          )}
         </span>
         {!isOnline && lastSeen > 0 && (
           <span className="text-xs shrink-0">
