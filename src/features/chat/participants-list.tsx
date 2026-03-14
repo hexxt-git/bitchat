@@ -39,11 +39,7 @@ export function ParticipantsList({ roomId }: { roomId: string }) {
         </Tooltip>
       </h2>
       {user.data?._id && (
-        <ParticipantsListInner
-          userId={user.data._id}
-          roomId={roomId}
-          createdById={createdById}
-        />
+        <ParticipantsListInner userId={user.data._id} roomId={roomId} />
       )}
     </div>
   );
@@ -52,11 +48,9 @@ export function ParticipantsList({ roomId }: { roomId: string }) {
 function ParticipantsListInner({
   userId,
   roomId,
-  createdById,
 }: {
   userId: Id<"users">;
   roomId: string;
-  createdById: Id<"users"> | null;
 }) {
   const [, setTick] = useState(0);
   const presenceState = usePresence(api.presence, roomId, userId);
