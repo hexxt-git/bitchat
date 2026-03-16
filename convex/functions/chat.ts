@@ -55,7 +55,8 @@ export const getRoom = query({
 export const sendMessage = mutation({
   args: {
     roomId: v.string(),
-    content: v.string(),
+    content: v.optional(v.string()),
+    fileId: v.optional(v.id("_storage")),
   },
   handler: async (ctx, args) => {
     const senderId = await getAuthUserId(ctx);
@@ -69,12 +70,30 @@ export const sendMessage = mutation({
     if (!room) {
       throw new Error("Room not found");
     }
-    await ctx.db.insert("chatMessage", {
+
+    const content = args.content?.trim();
+    if (!content && !args.fileId) {
+      throw new Error("Message content or file is required");
+    }
+
+    const messageId = await ctx.db.insert("chatMessage", {
       senderId,
-      content: args.content,
+      content: content || undefined,
       room: room._id,
+      file: args.fileId,
       file_processed: false,
     });
+
+    if (args.fileId) {
+      await ctx.scheduler.runAfter(
+        0,
+        internal.functions.process_image.processImage,
+        {
+          messageId,
+          originalStorageId: args.fileId,
+        },
+      );
+    }
   },
 });
 
@@ -85,38 +104,6 @@ export const generateFileUploadUrl = mutation({
       throw new Error("User not found");
     }
     return await ctx.storage.generateUploadUrl();
-  },
-});
-
-export const sendFile = mutation({
-  args: { roomId: v.string(), fileId: v.id("_storage") },
-  handler: async (ctx, args) => {
-    const senderId = await getAuthUserId(ctx);
-    if (!senderId) {
-      throw new Error("User not found");
-    }
-    const room = await ctx.db
-      .query("rooms")
-      .withIndex("by_name", (q) => q.eq("name", args.roomId))
-      .first();
-    if (!room) {
-      throw new Error("Room not found");
-    }
-    const messageId = await ctx.db.insert("chatMessage", {
-      senderId,
-      room: room._id,
-      file: args.fileId,
-      file_processed: false,
-    });
-
-    await ctx.scheduler.runAfter(
-      0,
-      internal.functions.process_image.processImage,
-      {
-        messageId,
-        originalStorageId: args.fileId,
-      },
-    );
   },
 });
 
