@@ -89,8 +89,8 @@ function MessageListInner({
                   alt="File"
                   className="w-full max-w-xs aspect-3/2 object-cover"
                   style={{
-                    filter: `grayscale(100%) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='b' filterUnits='userSpaceOnUse' primitiveUnits='userSpaceOnUse' x='0' y='0'%3E%3CfeFlood x='0' y='0' height='2' width='2'/%3E%3CfeComposite width='4' height='4'/%3E%3CfeTile result='a'/%3E%3CfeComposite in='SourceGraphic' in2='a' operator='in'/%3E%3CfeMorphology operator='dilate' radius='2'/%3E%3C/filter%3E%3C/svg%3E#b")`,
-                    WebkitFilter: `grayscale(100%) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='b' filterUnits='userSpaceOnUse' primitiveUnits='userSpaceOnUse' x='0' y='0'%3E%3CfeFlood x='0' y='0' height='2' width='2'/%3E%3CfeComposite width='4' height='4'/%3E%3CfeTile result='a'/%3E%3CfeComposite in='SourceGraphic' in2='a' operator='in'/%3E%3CfeMorphology operator='dilate' radius='2'/%3E%3C/filter%3E%3C/svg%3E#b")`,
+                    filter: `grayscale(100%) contrast(120%) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='b' filterUnits='userSpaceOnUse' primitiveUnits='userSpaceOnUse' x='0' y='0'%3E%3CfeFlood x='0' y='0' height='2' width='2'/%3E%3CfeComposite width='4' height='4'/%3E%3CfeTile result='a'/%3E%3CfeComposite in='SourceGraphic' in2='a' operator='in'/%3E%3CfeMorphology operator='dilate' radius='2'/%3E%3C/filter%3E%3C/svg%3E#b")`,
+                    WebkitFilter: `grayscale(100% contrast(120%) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='b' filterUnits='userSpaceOnUse' primitiveUnits='userSpaceOnUse' x='0' y='0'%3E%3CfeFlood x='0' y='0' height='2' width='2'/%3E%3CfeComposite width='4' height='4'/%3E%3CfeTile result='a'/%3E%3CfeComposite in='SourceGraphic' in2='a' operator='in'/%3E%3CfeMorphology operator='dilate' radius='2'/%3E%3C/filter%3E%3C/svg%3E#b")`,
                   }}
                 />
 
