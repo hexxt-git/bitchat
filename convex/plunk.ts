@@ -5,9 +5,9 @@ import { Email } from "@convex-dev/auth/providers/Email";
  * @see https://www.useplunk.com/
  */
 export const PlunkEmail = Email({
-  id: "plunk",
-  name: "Plunk",
-  from: process.env.PLUNK_FROM ?? "noreply@example.com",
+  id: "password",
+  name: "BitChat",
+  from: process.env.PLUNK_FROM ?? "noreply@clean-asset-repository.com",
   maxAge: 60 * 60, // 1 hour
   apiKey: process.env.PLUNK_API_KEY,
   async sendVerificationRequest(params) {
@@ -19,17 +19,10 @@ export const PlunkEmail = Email({
         "Plunk API key is required. Set PLUNK_API_KEY in Convex environment variables.",
       );
     }
-    const fromStr =
-      typeof provider.from === "string"
-        ? provider.from
-        : (process.env.PLUNK_FROM ?? "noreply@example.com");
-    const fromMatch = fromStr.match(/<([^>]+)>/);
-    const fromEmail = fromMatch ? fromMatch[1].trim() : fromStr;
-    const fromName = fromMatch
-      ? fromStr.replace(/<[^>]+>/, "").trim()
-      : (provider.name ?? "BitChat");
+    const fromEmail = provider.from;
+    const fromName = provider.name;
 
-    const res = await fetch("https://api.useplunk.com/v1/send", {
+    const res = await fetch("https://next-api.useplunk.com/v1/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

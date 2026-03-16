@@ -111,7 +111,7 @@ export function AuthBackground() {
 
   const invert = resolvedTheme === "dark";
 
-  const islandSize = invert ? 0.7 : 0.55;
+  const islandSize = invert ? 0.69 : 0.55;
   const edgeWidth = invert ? 0.32 : 0.3;
 
   const dataUrl = useMemo(() => {

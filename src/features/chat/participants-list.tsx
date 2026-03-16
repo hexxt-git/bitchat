@@ -17,8 +17,6 @@ export function ParticipantsList({ roomId }: { roomId: string }) {
   const room = useQuery(convexQuery(api.functions.chat.getRoom, { roomId }));
   const creatorName = room.data?.creatorName;
 
-  console.log(room.data);
-
   return (
     <div className="space-y-1 flex-1 overflow-y-auto">
       <h2 className="flex items-center gap-1.5 capitalize">
