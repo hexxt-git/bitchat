@@ -12,6 +12,7 @@ export default defineSchema({
     content: v.optional(v.string()),
     room: v.id("rooms"),
     file: v.optional(v.id("_storage")),
+    file_processed: v.boolean(),
   }).index("by_room", ["room"]),
   rooms: defineTable({
     name: v.string(),

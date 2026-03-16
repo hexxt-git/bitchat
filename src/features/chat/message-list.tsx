@@ -3,6 +3,8 @@ import { cn } from "../shared/lib/utils";
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../../convex/_generated/api";
+import { Loader } from "pixelarticons/react";
+import { motion, steps } from "motion/react";
 
 type Message = {
   _id: string;
@@ -11,6 +13,7 @@ type Message = {
   senderName: string | null;
   content?: string;
   file?: string | null;
+  file_processed?: boolean;
 };
 
 export function MessageList({ roomId }: { roomId: string }) {
@@ -72,13 +75,40 @@ function MessageListInner({
             </span>
           </span>
           {message.content}
-          {message.file && (
-            <img
-              src={message.file}
-              alt="File"
-              className="w-full max-w-xs max-h-xs object-contain"
-            />
-          )}
+          {message.file &&
+            (message.file_processed ? (
+              <img
+                src={message.file}
+                alt="File"
+                className="w-full max-w-xs aspect-3/2 object-cover grayscale-100"
+              />
+            ) : (
+              <div className="relative overflow-hidden max-w-xs aspect-3/2 w-full">
+                <img
+                  src={message.file}
+                  alt="File"
+                  className="w-full max-w-xs aspect-3/2 object-cover"
+                  style={{
+                    filter: `grayscale(100%) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='b' filterUnits='userSpaceOnUse' primitiveUnits='userSpaceOnUse' x='0' y='0'%3E%3CfeFlood x='0' y='0' height='2' width='2'/%3E%3CfeComposite width='4' height='4'/%3E%3CfeTile result='a'/%3E%3CfeComposite in='SourceGraphic' in2='a' operator='in'/%3E%3CfeMorphology operator='dilate' radius='2'/%3E%3C/filter%3E%3C/svg%3E#b")`,
+                    WebkitFilter: `grayscale(100%) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='b' filterUnits='userSpaceOnUse' primitiveUnits='userSpaceOnUse' x='0' y='0'%3E%3CfeFlood x='0' y='0' height='2' width='2'/%3E%3CfeComposite width='4' height='4'/%3E%3CfeTile result='a'/%3E%3CfeComposite in='SourceGraphic' in2='a' operator='in'/%3E%3CfeMorphology operator='dilate' radius='2'/%3E%3C/filter%3E%3C/svg%3E#b")`,
+                  }}
+                />
+
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-base-100 p-2">
+                  <motion.div
+                    initial={{ rotate: 0 }}
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 6,
+                      repeat: Infinity,
+                      ease: steps(16),
+                    }}
+                  >
+                    <Loader className="size-10" />
+                  </motion.div>
+                </div>
+              </div>
+            ))}
         </div>
       ))}
     </div>

@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { internal } from "../_generated/api";
 
 export const createRoom = mutation({
   args: {
@@ -72,6 +73,7 @@ export const sendMessage = mutation({
       senderId,
       content: args.content,
       room: room._id,
+      file_processed: false,
     });
   },
 });
@@ -100,11 +102,21 @@ export const sendFile = mutation({
     if (!room) {
       throw new Error("Room not found");
     }
-    await ctx.db.insert("chatMessage", {
+    const messageId = await ctx.db.insert("chatMessage", {
       senderId,
       room: room._id,
       file: args.fileId,
+      file_processed: false,
     });
+
+    await ctx.scheduler.runAfter(
+      0,
+      internal.functions.process_image.processImage,
+      {
+        messageId,
+        originalStorageId: args.fileId,
+      },
+    );
   },
 });
 

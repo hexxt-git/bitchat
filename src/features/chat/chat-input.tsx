@@ -83,6 +83,7 @@ export function ChatInput({ roomId }: { roomId: string }) {
                 placeholder="Send a message"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
+                className="min-w-32"
               />
             )}
           />
