@@ -27,7 +27,6 @@ function IndexPage() {
           size="icon"
           render={<Link to="/settings" />}
           nativeButton={false}
-          render={<Link to="/settings" />}
           aria-label="Open settings"
         >
           <Settings2 />

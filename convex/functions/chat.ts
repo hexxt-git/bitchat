@@ -7,9 +7,31 @@ export const createRoom = mutation({
   args: {
     name: v.string(),
     public: v.optional(v.boolean()),
+    captchaId: v.id("captchas"),
+    captchaAnswer: v.string(),
   },
   handler: async (ctx, args) => {
-    await getAuthUserId(ctx);
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    const captcha = await ctx.db.get("captchas", args.captchaId);
+    if (!captcha) {
+      throw new Error("Captcha not found. Please refresh and try again.");
+    }
+
+    if (Date.now() > captcha.expiresAt) {
+      await ctx.db.delete("captchas", args.captchaId);
+      throw new Error("Captcha expired. Please refresh and try again.");
+    }
+
+    if (captcha.text.toUpperCase() !== args.captchaAnswer.toUpperCase().trim()) {
+      throw new Error("Incorrect captcha. Please try again.");
+    }
+
+    await ctx.db.delete("captchas", args.captchaId);
+
     const name = args.name.trim();
     if (!name) {
       throw new Error("Room name is required");
@@ -21,7 +43,6 @@ export const createRoom = mutation({
     if (existing) {
       return existing._id;
     }
-    const userId = await getAuthUserId(ctx);
     return await ctx.db.insert("rooms", {
       name,
       createdBy: userId ?? undefined,

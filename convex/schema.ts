@@ -19,4 +19,8 @@ export default defineSchema({
     createdBy: v.optional(v.id("users")),
     public: v.optional(v.boolean()),
   }).index("by_name", ["name"]),
+  captchas: defineTable({
+    text: v.string(),
+    expiresAt: v.number(),
+  }).index("by_expires", ["expiresAt"]),
 });
