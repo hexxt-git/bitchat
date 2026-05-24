@@ -28,10 +28,12 @@ export function ChatSidebar({ roomId, onNavigateHome }: ChatSidebarProps) {
             Back to rooms
           </Button>
           <div className="flex gap-1.5">
-            <Button
-              onClick={() => signOut()}
-              className="flex-1 flex items-center gap-2 border-0"
-            >
+             <Button
+               onClick={() => {
+                 void signOut();
+               }}
+               className="flex-1 flex items-center gap-2 border-0"
+             >
               <Logout />
               Sign out
             </Button>

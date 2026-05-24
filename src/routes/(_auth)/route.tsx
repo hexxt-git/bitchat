@@ -6,10 +6,10 @@ import { useConvexAuth } from "convex/react";
 import { useDelay } from "@/features/shared/utils/use-delay";
 
 export const Route = createFileRoute("/(_auth)")({
-  component: RouteComponent,
+  component: AuthLayout,
 });
 
-function RouteComponent() {
+function AuthLayout() {
   const auth = useConvexAuth();
   const isDelayed = useDelay(1000);
 

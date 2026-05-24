@@ -37,15 +37,15 @@ export function CreateRoomForm() {
     validators: {
       onSubmit: createRoomSchema,
     },
-    onSubmit: async ({ value }: { value: { name: string } }) => {
-      setError(null);
-      try {
-        await createRoom({ name: value.name.trim() });
-        navigate({ to: "/rooms/$room", params: { room: value.name.trim() } });
-      } catch (err) {
-        setError(getErrorMessage(err));
-      }
-    },
+     onSubmit: async ({ value }: { value: { name: string } }) => {
+       setError(null);
+       try {
+         await createRoom({ name: value.name.trim() });
+         await navigate({ to: "/rooms/$room", params: { room: value.name.trim() } });
+       } catch (err) {
+         setError(getErrorMessage(err));
+       }
+     },
   });
 
   const handleRandomize = () => {
@@ -57,7 +57,7 @@ export function CreateRoomForm() {
       id="create-room-form"
       onSubmit={(e) => {
         e.preventDefault();
-        form.handleSubmit();
+        void form.handleSubmit();
       }}
     >
       <FieldGroup>

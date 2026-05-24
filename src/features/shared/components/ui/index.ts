@@ -1,4 +1,5 @@
-export { Button, buttonVariants } from "./button";
+export { Button } from "./button";
+export { buttonVariants } from "./button-variants";
 export {
   Field,
   FieldGroup,

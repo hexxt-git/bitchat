@@ -2,10 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Chat } from "@/features/chat/chat";
 
 export const Route = createFileRoute("/(_authenticated)/rooms/$room")({
-  component: IndexPage,
+  component: RoomPage,
 });
 
-function IndexPage() {
+function RoomPage() {
   const { room } = Route.useParams();
   return <Chat roomId={room} />;
 }

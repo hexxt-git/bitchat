@@ -79,7 +79,7 @@ export const replaceMessageFile = internalMutation({
     storageId: v.id("_storage"),
   },
   handler: async (ctx, args) => {
-    await ctx.db.patch(args.messageId, {
+    await ctx.db.patch("chatMessage", args.messageId, {
       file: args.storageId,
       file_processed: true,
     });
