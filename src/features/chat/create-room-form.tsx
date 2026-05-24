@@ -144,7 +144,7 @@ export function CreateRoomForm() {
                 className="h-20 w-auto border-2 border-foreground bg-white pixelated"
                 style={{ imageRendering: "pixelated" }}
               />
-              <Button size="icon" variant="outline" onClick={refreshCaptcha}>
+              <Button type="button" size="icon" variant="outline" onClick={refreshCaptcha}>
                 <Reload />
                 <span className="sr-only">Refresh captcha</span>
               </Button>
