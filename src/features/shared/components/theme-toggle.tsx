@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/features/shared/components/ui";
-import { buttonVariants } from "@/features/shared/components/ui/button";
+import { buttonVariants } from "@/features/shared/components/ui/button-variants";
 import { cn } from "@/features/shared/lib/utils";
 
 export function ThemeToggle() {

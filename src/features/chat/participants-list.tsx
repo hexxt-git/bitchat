@@ -57,13 +57,16 @@ function ParticipantsListInner({
     return () => clearInterval(id);
   }, []);
 
-  const participants = (presenceState ?? []).map((entry) => ({
-    _id: entry.userId,
-    email: "email" in entry ? String(entry.email ?? "") : "",
-    name: entry.name ?? "Unknown",
-    isOnline: entry.online,
-    lastSeen: entry.lastDisconnected,
-  }));
+   const participants = (presenceState ?? []).map((entry) => {
+     const extended = entry as unknown as Record<string, unknown>;
+     return {
+       _id: entry.userId,
+       email: typeof extended.email === "string" ? extended.email : "",
+       name: entry.name ?? "Unknown",
+       isOnline: entry.online,
+       lastSeen: entry.lastDisconnected,
+     };
+   });
 
   return participants.map(({ _id, email, name, isOnline, lastSeen }) => {
     const displayName = email || name || "Unknown";

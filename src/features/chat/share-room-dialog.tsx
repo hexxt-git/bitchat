@@ -55,7 +55,7 @@ export function ShareRoomDialog({ open, url, onClose }: ShareRoomDialogProps) {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleCopyLink();
+            void handleCopyLink();
           }}
           className="flex flex-col gap-2"
         >

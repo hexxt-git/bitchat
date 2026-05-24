@@ -152,29 +152,36 @@ export function AuthBackground() {
     };
   }, []);
 
-  useEffect(() => {
-    if (dataUrl === displayDataUrl) {
-      setDisplayOpacity(1);
-      return;
-    }
+   useEffect(() => {
+     if (dataUrl === displayDataUrl) {
+       // No need to set state if values are already equal
+       return;
+     }
 
-    const isInitial = displayDataUrl === FALLBACK_DATA_URL;
+     const isInitial = displayDataUrl === FALLBACK_DATA_URL;
 
-    if (isInitial) {
-      setDisplayDataUrl(dataUrl);
-      setDisplayOpacity(1);
-      return;
-    }
+     if (isInitial) {
+       // Defer state update to avoid synchronous setState in effect
+       requestAnimationFrame(() => {
+         setDisplayDataUrl(dataUrl);
+         setDisplayOpacity(1);
+       });
+       return;
+     }
 
-    setDisplayOpacity(0);
+      const raf = requestAnimationFrame(() => setDisplayOpacity(0));
 
-    const t = setTimeout(() => {
-      setDisplayDataUrl(dataUrl);
-      requestAnimationFrame(() => setDisplayOpacity(1));
-    }, 150);
+      const t = setTimeout(() => {
+        cancelAnimationFrame(raf);
+        setDisplayDataUrl(dataUrl);
+        requestAnimationFrame(() => setDisplayOpacity(1));
+      }, 150);
 
-    return () => clearTimeout(t);
-  }, [dataUrl, displayDataUrl]);
+      return () => {
+        cancelAnimationFrame(raf);
+        clearTimeout(t);
+      };
+   }, [dataUrl, displayDataUrl]);
 
   return (
     <img

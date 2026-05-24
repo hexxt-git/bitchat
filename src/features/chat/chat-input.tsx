@@ -56,24 +56,36 @@ export function ChatInput({ roomId }: { roomId: string }) {
     defaultValues: {
       content: "",
     },
-    onSubmit: async ({ value }) => {
-      const content = value.content.trim();
-      if (!content && !queuedFile) return;
-
-      let fileId: Id<"_storage"> | undefined;
-      if (queuedFile) {
-        fileId = await uploadFile.mutateAsync(queuedFile);
-      }
-
-      await sendMessage.mutateAsync({
-        roomId,
-        content: content || undefined,
-        fileId,
-      });
-
-      form.reset();
-      setQueuedFile(null);
-    },
+     onSubmit: async ({ value }) => {
+       const content = value.content.trim();
+       if (!content && !queuedFile) return;
+ 
+       let fileId: Id<"_storage"> | undefined;
+       if (queuedFile) {
+         try {
+           fileId = await uploadFile.mutateAsync(queuedFile);
+         } catch (err) {
+           console.error("Failed to upload file:", err);
+           // Optionally show error to user
+           return;
+         }
+       }
+ 
+       try {
+         await sendMessage.mutateAsync({
+           roomId,
+           content: content || undefined,
+           fileId,
+         });
+       } catch (err) {
+         console.error("Failed to send message:", err);
+         // Optionally show error to user
+         return;
+       }
+ 
+       form.reset();
+       setQueuedFile(null);
+     },
   });
 
   const handleUpload = async () => {
@@ -93,7 +105,7 @@ export function ChatInput({ roomId }: { roomId: string }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          form.handleSubmit();
+          void form.handleSubmit();
         }}
       >
         {queuedFile && (
@@ -123,7 +135,9 @@ export function ChatInput({ roomId }: { roomId: string }) {
           <InputGroupAddon align="inline-end">
             <Button
               type="button"
-              onClick={handleUpload}
+              onClick={() => {
+                void handleUpload();
+              }}
               disabled={isSubmitting}
               className="border-2"
             >

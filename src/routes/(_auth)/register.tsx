@@ -6,9 +6,5 @@ export const Route = createFileRoute("/(_auth)/register")({
   validateSearch: z.object({
     from: z.string().optional(),
   }),
-  component: RegisterPage,
+  component: () => <RegisterForm />,
 });
-
-function RegisterPage() {
-  return <RegisterForm />;
-}
