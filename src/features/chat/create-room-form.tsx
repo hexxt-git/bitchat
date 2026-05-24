@@ -89,7 +89,7 @@ export function CreateRoomForm() {
           captchaId: captchaId as any,
           captchaAnswer: value.captcha.trim(),
         });
-        navigate({ to: "/rooms/$room", params: { room: value.name.trim() } });
+        await navigate({ to: "/rooms/$room", params: { room: value.name.trim() } });
       } catch (err) {
         setError(getErrorMessage(err));
         refreshCaptcha();
@@ -107,7 +107,7 @@ export function CreateRoomForm() {
       id="create-room-form"
       onSubmit={(e) => {
         e.preventDefault();
-        form.handleSubmit();
+        void form.handleSubmit();
       }}
     >
       <FieldGroup>

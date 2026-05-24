@@ -52,16 +52,16 @@ export function RegisterForm() {
       formData.set("password", value.password);
       formData.set("flow", "signUp");
 
-      try {
-        const result = await signIn("password", formData);
-        if (result?.signingIn) {
-          navigate({ to: search.from ?? "/" });
-        } else {
-          setEmailVerificationSent(value.email);
-        }
-      } catch (err) {
-        setError(getErrorMessage(err));
-      }
+       try {
+         const result = await signIn("password", formData);
+         if (result?.signingIn) {
+           await navigate({ to: search.from ?? "/" });
+         } else {
+           setEmailVerificationSent(value.email);
+         }
+       } catch (err) {
+         setError(getErrorMessage(err));
+       }
     },
   });
 
@@ -73,7 +73,7 @@ export function RegisterForm() {
           id="register-form"
           onSubmit={(e) => {
             e.preventDefault();
-            form.handleSubmit();
+            void form.handleSubmit();
           }}
         >
           <FieldGroup>
@@ -127,12 +127,14 @@ export function RegisterForm() {
               <span className="text-muted-foreground text-sm">or</span>
               <div className="flex-1 h-px bg-base-300" />
             </div>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={form.state.isSubmitting}
-              onClick={() => void signIn("google")}
-            >
+             <Button
+               type="button"
+               variant="outline"
+               disabled={form.state.isSubmitting}
+               onClick={() => {
+                 void signIn("google");
+               }}
+             >
               Sign in with Google
             </Button>
             <div className="flex flex-row flex-wrap gap-2">

@@ -41,11 +41,11 @@ export function JoinRoomForm() {
     },
   });
 
-  useEffect(() => {
-    if (roomQuery.data && roomToJoin) {
-      navigate({ to: "/rooms/$room", params: { room: roomToJoin } });
-    }
-  }, [roomQuery.data, roomToJoin, navigate]);
+   useEffect(() => {
+     if (roomQuery.data && roomToJoin) {
+       void navigate({ to: "/rooms/$room", params: { room: roomToJoin } });
+     }
+   }, [roomQuery.data, roomToJoin, navigate]);
 
   const showNotFoundError =
     roomToJoin &&
@@ -58,7 +58,7 @@ export function JoinRoomForm() {
       id="join-room-form"
       onSubmit={(e) => {
         e.preventDefault();
-        form.handleSubmit();
+        void form.handleSubmit();
       }}
     >
       <FieldGroup>

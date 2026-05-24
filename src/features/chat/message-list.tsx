@@ -76,7 +76,7 @@ function MessageListInner({
           </span>
           {message.content}
           {message.file &&
-            (message.file_processed ? (
+            (message.file_processed !== false ? (
               <img
                 src={message.file}
                 alt="File"

@@ -119,6 +119,7 @@ export const sendMessage = mutation({
 });
 
 export const generateFileUploadUrl = mutation({
+  args: {},
   handler: async (ctx) => {
     const senderId = await getAuthUserId(ctx);
     if (!senderId) {

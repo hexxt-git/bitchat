@@ -10,34 +10,35 @@ export function cn(...inputs: ClassValue[]) {
  * Handles Error instances, Convex-wrapped errors, nested errors, and primitives.
  */
 export function getErrorMessage(
-  err: unknown,
-  fallback = "Something went wrong. Please try again.",
+   err: unknown,
+   fallback = "Something went wrong. Please try again.",
 ): string {
-  const raw = err instanceof Error ? err.message : String(err ?? "").trim();
-  if (!raw) return fallback;
+   const raw = err instanceof Error ? err.message : typeof err === "string" ? err : JSON.stringify(err);
+   const trimmed = raw.trim();
+   if (!trimmed) return fallback;
 
-  // Strip Convex wrapper: [CONVEX A(path)] [Request ID: xxx] Server Error\nActual message
-  const lines = raw
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean);
-  const meaningful = lines.find(
-    (l) =>
-      !l.startsWith("[CONVEX") &&
-      !l.includes("Request ID") &&
-      !l.includes("Called by client") &&
-      l !== "Server Error",
-  );
+   // Strip Convex wrapper: [CONVEX A(path)] [Request ID: xxx] Server Error\nActual message
+   const lines = raw
+     .split("\n")
+     .map((l) => l.trim())
+     .filter(Boolean);
+   const meaningful = lines.find(
+     (l) =>
+       !l.startsWith("[CONVEX") &&
+       !l.includes("Request ID") &&
+       !l.includes("Called by client") &&
+       l !== "Server Error",
+   );
 
-  // Unwrap nested "Uncaught Error: Inner message" patterns
-  let extracted = meaningful ?? raw;
-  let prev: string;
-  do {
-    prev = extracted;
-    extracted = extracted.replace(/^(?:Uncaught\s+)?Error:\s*/i, "").trim();
-  } while (prev !== extracted);
+   // Unwrap nested "Uncaught Error: Inner message" patterns
+   let extracted = meaningful ?? raw;
+   let prev: string;
+   do {
+     prev = extracted;
+     extracted = extracted.replace(/^(?:Uncaught\s+)?Error:\s*/i, "").trim();
+   } while (prev !== extracted);
 
-  return extracted || fallback;
+   return extracted ?? fallback;
 }
 
 export function formatTimeAgo(timestamp: number): string {

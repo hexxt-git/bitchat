@@ -34,15 +34,15 @@ export interface FormFieldLike {
 }
 
 export interface FormInputProps extends Omit<
-  React.ComponentProps<"input">,
-  "value" | "onChange" | "onBlur" | "name" | "id"
+   React.ComponentProps<"input">,
+   "value" | "onChange" | "onBlur" | "name" | "id"
 > {
-  field: FormFieldLike;
-  label?: string;
-  leftIcon?: IconComponent;
-  rightIcon?: IconComponent;
-  addons?: React.ReactNode;
-  containerClassName?: string;
+   field: FormFieldLike;
+   label?: string;
+   leftIcon?: IconComponent;
+   rightIcon?: IconComponent;
+   addons?: React.ReactNode;
+   containerClassName?: string;
 }
 
 const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
@@ -72,10 +72,10 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
     const hasError = errors.length > 0;
 
     return (
-      <Field
-        data-slot="form-input"
-        className={cn(undefined, containerClassName)}
-      >
+         <Field
+         data-slot="form-input"
+         className={cn(className, containerClassName)}
+       >
         {label && <FieldLabel htmlFor={inputId}>{label}</FieldLabel>}
         <InputGroup
           className={cn(
